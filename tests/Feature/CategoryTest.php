@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use Database\Seeders\CategorySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
@@ -37,5 +38,62 @@ class CategoryTest extends TestCase
         $total = Category::count();
         $this->assertEquals($total, 10);
         $this->assertTrue($result);
+    }
+
+    public function testFind() {
+        $this->seed(CategorySeeder::class);
+
+        $category = Category::find("FOOD");
+        
+        $this->assertNotNull($category);
+        $this->assertEquals("FOOD", $category->id);
+        $this->assertEquals("Food", $category->name);
+        $this->assertEquals("Food Category", $category->description);
+        
+    }
+
+    public function testUpdate() {
+        $this->seed(CategorySeeder::class);
+
+        $category = Category::find("FOOD");
+        $category->name = "Food Updated";
+
+        $result = $category->update();
+        self::assertTrue($result);
+    }
+
+    public function testSelect() {
+        for($i = 0; $i < 5; $i++) {
+            $category = new Category();
+            $category->id = "ID $i";
+            $category->name = "Name $i";
+            $category->save();
+        }
+
+        $categories = Category::query()->whereNull("description")->get();
+        self::assertEquals(5, $categories->count());
+        $categories->each(function ($category) {
+            self::assertNull($category->description);
+            Log::info(json_encode($category));
+        });
+    }
+
+    
+    public function testSelectUpdate() {
+        for($i = 0; $i < 5; $i++) {
+            $category = new Category();
+            $category->id = "ID $i";
+            $category->name = "Name $i";
+            $category->save();
+        }
+
+        $categories = Category::query()->whereNull("description")->get();
+        self::assertEquals(5, $categories->count());
+        $categories->each(function ($category) {
+            $category->description = "Updated";
+            $category->update();
+            self::assertNotNull($category->description);
+            Log::info(json_encode($category));
+        });
     }
 }
