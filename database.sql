@@ -1,0 +1,1 @@
+CREATE DATABASE belajar_laravel_eloquent;
