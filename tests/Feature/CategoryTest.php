@@ -96,4 +96,27 @@ class CategoryTest extends TestCase
             Log::info(json_encode($category));
         });
     }
+
+    public function testUpdateMany() {
+        $categories = [];
+        for($i = 0; $i < 10; $i++) {
+            $categories[] = [
+                "id" => "ID $i",
+                "name" => "Name $i"
+            ];
+        }
+        $result = Category::insert($categories);
+        $this->assertTrue($result);
+
+        Category::whereNull("description")->update([
+            "description" => "Updated"
+        ]);
+
+        $total = Category::where("description", "=", "Updated")->count();
+        $result = Category::where("description", "=", "Updated")->get();
+        $result->each(function ($item) {
+            Log::info(json_encode($item));
+        });
+        $this->assertEquals(10, $total);
+    }
 }
