@@ -18,4 +18,8 @@ class Category extends Model
         "name",
         "description",
     ];
+
+    protected static function booted() {
+        
+    }
 }

@@ -34,9 +34,23 @@ class VoucherTest extends TestCase
         $voucher = Voucher::where("name", "=", "Sample Voucher")->first();
 
         $voucher->delete();
-   
+        $this->assertNotNull($voucher);
         $voucher = Voucher::where("name", "=", "Sample Voucher")->first();
 
         $this->assertNull($voucher);
     }
+
+    
+    public function testTakeSoftDelete() {
+        $this->seed(VoucherSeeder::class);
+        $voucher = Voucher::where("name", "=", "Sample Voucher")->first();
+
+        $voucher->delete();
+
+        $voucher = Voucher::withTrashed()->where("name", "=", "Sample Voucher")->first();
+
+        $this->assertNotNull($voucher);
+    }
+
+
 }
