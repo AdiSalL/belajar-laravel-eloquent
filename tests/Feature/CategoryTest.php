@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
+use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertTrue;
 
 class CategoryTest extends TestCase
@@ -118,5 +119,35 @@ class CategoryTest extends TestCase
             Log::info(json_encode($item));
         });
         $this->assertEquals(10, $total);
+    }
+
+    public function testDelete() {
+        $this->seed(CategorySeeder::class);
+
+        $category = Category::query()->find("FOOD");
+        $result = $category->delete();
+        self::assertTrue($result);
+
+        $total = Category::count();
+        self::assertEquals(0, $total);
+    }
+
+    public function testDeleteMany() {
+        $categories = [];
+        for($i = 0; $i < 10; $i++) {
+            $categories[] = [
+                "id" => "ID $i",
+                "name" => "Name $i"
+            ];
+        }
+        $result = Category::insert($categories);
+        $this->assertTrue($result);
+
+        $total = Category::count();
+        assertEquals(10, $total);
+
+        $result = Category::whereNull("description")->delete();
+        $result = Category::count();
+        assertEquals(0, $result);
     }
 }
