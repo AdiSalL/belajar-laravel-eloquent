@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 
 class CategoryTest extends TestCase
@@ -149,5 +150,42 @@ class CategoryTest extends TestCase
         $result = Category::whereNull("description")->delete();
         $result = Category::count();
         assertEquals(0, $result);
+    }
+
+    public function testCreate() {
+        $request = [
+            "id" => 'FOOD',
+            "name" => "Food",
+            "description" => "Food Category Description"
+        ];
+        $category = new Category($request);
+        $category->save();
+
+        self::assertNotNull($category->id);
+    }
+
+    public function testCreateMethod() {
+        $request = [
+            "id" => 'FOOD',
+            "name" => "Food",
+            "description" => "Food Category Description"
+        ];
+
+        $category = Category::create($request);
+        self::assertNotNull($category->id);
+    }
+
+    public function testUpdateMass() {
+        $this->seed(CategorySeeder::class);
+
+        $request = [
+            "name" => "Food Updated",
+            "desription" => 'Food Category Updated'
+        ];
+        $category = Category::find("FOOD");
+        $category->fill($request);
+        $category->save();
+
+        self::assertNotNull($category->id);
     }
 }

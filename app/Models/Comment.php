@@ -13,4 +13,8 @@ class Comment extends Model
     public $incrementing = true;
     public $timestamps = true;
     
+    protected $attributes = [
+        "title" => 'Sample Title',
+        "comment" => "Sample Comment"
+    ];
 }
