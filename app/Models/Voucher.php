@@ -10,5 +10,8 @@ class Voucher extends Model
 {
     use HasUuids;
     protected $table = "vouchers";
-    
+    protected $primaryKey = "id";
+    protected $keyType = "string";
+    public $incrementing = false;
+    public $timestamps = false;
 }
