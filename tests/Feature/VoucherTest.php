@@ -17,4 +17,14 @@ class VoucherTest extends TestCase
 
         $this->assertNotNull($voucher->id);
     }
+
+    public function testCreateVoucherCode() {
+        $voucher = new Voucher();
+        $voucher->name = "Sample Voucher";
+        $voucher->save();
+
+        $this->assertNotNull($voucher->id);
+        $this->assertNotNull($voucher->voucher_code);
+        
+    }
 }

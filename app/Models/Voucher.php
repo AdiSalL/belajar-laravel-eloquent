@@ -14,4 +14,10 @@ class Voucher extends Model
     protected $keyType = "string";
     public $incrementing = false;
     public $timestamps = false;
+
+    public function uniqueIds()
+    {
+        return [$this->primaryKey, "voucher_code"];
+    }
+
 }
