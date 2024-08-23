@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,4 +23,12 @@ class Voucher extends Model
         return [$this->primaryKey, "voucher_code"];
     }
 
+    public function scopeActive(EloquentBuilder $builder):void {
+        $builder->where("is_active", true);
+    }
+
+
+    public function scopeNotActive(EloquentBuilder $builder):void {
+        $builder->where("is_active", false );
+    }
 }
