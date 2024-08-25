@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Customer;
 use App\Models\Wallets;
 use Database\Seeders\CustomerSeeder;
+use Database\Seeders\VirtualAccountSeeder;
 use Database\Seeders\WalletsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -40,5 +41,15 @@ class CustomerTest extends TestCase
 
         self::assertNotNull($wallet->customer_id);
 
+    }
+
+    public function testHasOneThrough() {
+        $this->seed([CustomerSeeder::class, WalletsSeeder::class, VirtualAccountSeeder::class]);
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
+
+        $virtualAccount = $customer->virtualAccount;
+        self::assertNotNull($virtualAccount);
+        self::assertEquals("BCA", $virtualAccount->bank);
     }
 }
