@@ -13,17 +13,12 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         DB::table("reviews")->delete();
+        DB::table("customers_likes_products")->delete();
         DB::table("products")->delete();
         DB::table("categories")->delete();
         DB::table("vouchers")->delete();
         DB::table("virtual_accounts")->delete();
         DB::table("wallets")->delete();
         DB::table("customers")->delete();
-   
-        
-    
-        
-        
-        
     }
 }

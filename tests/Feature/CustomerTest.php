@@ -2,9 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Wallets;
+use Database\Seeders\CategorySeeder;
 use Database\Seeders\CustomerSeeder;
+use Database\Seeders\ProductSeeder;
 use Database\Seeders\VirtualAccountSeeder;
 use Database\Seeders\WalletsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -51,5 +54,78 @@ class CustomerTest extends TestCase
         $virtualAccount = $customer->virtualAccount;
         self::assertNotNull($virtualAccount);
         self::assertEquals("BCA", $virtualAccount->bank);
+    }
+
+    public function testManyToMany() {
+        $this->seed([CustomerSeeder::class, CategorySeeder::class, ProductSeeder::class]);
+
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
+
+        $customer->likeProducts()->attach("1");
+
+        $product = $customer->likeProducts;
+        self::assertCount(1, $product);
+        self::assertEquals("1", $product[0]->id);
+    }
+
+    public function testRemoveToManyDetach() {
+        $this->testManyToMany();
+
+        $customer = Customer::find("EKO");
+        $customer->likeProducts()->detach("1");
+
+        $product = $customer->likeProducts;
+        self::assertCount(0, $product);
+    }
+
+    public function testPivotAttribute() {
+        $this->testManyToMany();
+
+        $customer = Customer::find("EKO");
+        $products = $customer->likeProducts;
+
+        foreach($products as $product){
+            $pivot = $product->pivot;
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+            self::assertNotNull($pivot->created_at);
+            
+        }
+    }
+
+    public function testPivotAttributeCondition() {
+        $this->testManyToMany();
+
+        $customer = Customer::find("EKO");
+        $products = $customer->likeProductsLastWeek;
+
+        foreach($products as $product){
+            $pivot = $product->pivot;
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+            self::assertNotNull($pivot->created_at);
+            
+        }
+    }
+
+    public function testPivotModel() {
+        $this->testManyToMany();
+
+        $customer = Customer::find("EKO");
+        $products = $customer->likeProducts;
+
+        foreach($products as $product){
+            $pivot = $product->pivot;
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+            self::assertNotNull($pivot->created_at);
+            self::assertNotNull($pivot->product);
+            self::assertNotNull($pivot->customer);
+            
+        }
     }
 }
