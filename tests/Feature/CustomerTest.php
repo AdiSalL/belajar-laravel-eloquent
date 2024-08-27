@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Wallets;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\CustomerSeeder;
+use Database\Seeders\ImageSeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\VirtualAccountSeeder;
 use Database\Seeders\WalletsSeeder;
@@ -127,5 +128,17 @@ class CustomerTest extends TestCase
             self::assertNotNull($pivot->customer);
             
         }
+    }
+
+    public function testOneToOnePolyMorphic() {
+        $this->seed([CustomerSeeder::class, ImageSeeder::class]);
+
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
+
+        $image = $customer->image;
+        self::assertNotNull($image);
+
+        self::assertEquals("https://robohash.org/1.png?size=200x200", $image->url);
     }
 }
