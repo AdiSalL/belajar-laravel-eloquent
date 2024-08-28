@@ -23,6 +23,10 @@ class Category extends Model
         "description",
     ];
 
+    protected $casts = [
+        
+    ];  
+
     protected static function booted():void {
         parent::booted();
         self::addGlobalScope(new IsActiveScope());
