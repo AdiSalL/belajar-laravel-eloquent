@@ -15,7 +15,8 @@ class CommentTest extends TestCase
         $comment->email = "adiefsal@gmail.com";
         $comment->title = "aku jg mw";
         $comment->comment = "ahh jgn dong";
-        
+        $comment->commentable_id = "1";
+        $comment->commentable_type = "product";
         $comment->save();
         $this->assertNotNull($comment->id);
     }
@@ -23,7 +24,8 @@ class CommentTest extends TestCase
     public function testDefaultValues() {
         $comment = new Comment();
         $comment->email = "adiefsal@gmail.com";
-
+        $comment->commentable_id = "1";
+        $comment->commentable_type = "product";
         $comment->save();
         $this->assertNotNull($comment->id);
         $this->assertEquals($comment->title, "Sample Title");
