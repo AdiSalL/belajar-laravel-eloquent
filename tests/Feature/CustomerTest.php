@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Image;
 use App\Models\Wallets;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\CustomerSeeder;
@@ -141,4 +142,19 @@ class CustomerTest extends TestCase
 
         self::assertEquals("https://robohash.org/1.png?size=200x200", $image->url);
     }
+
+    public function testEager() {
+        $this->seed([CustomerSeeder::class, WalletsSeeder::class, ImageSeeder::class]);
+
+        $customer = Customer::with(["wallet", "image"])->find("EKO");
+        self::assertNotNull($customer);
+    }
+
+    public function testEagerModel() {
+        $this->seed([CustomerSeeder::class, WalletsSeeder::class, ImageSeeder::class]);
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
+    }
+
+    
 }

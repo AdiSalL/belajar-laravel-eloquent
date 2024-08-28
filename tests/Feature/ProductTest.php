@@ -106,5 +106,13 @@ class ProductTest extends TestCase
         }
     }
 
+    public function testEloquentCollection() {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+        $products = Product::get();
+        $products = $products->toQuery()->where("price", "=", 200)->get();
+        self::assertCount(1, $products);
+        self::assertEquals("2", $products[0]->id);
+    }
+
 }
 

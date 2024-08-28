@@ -17,8 +17,10 @@ class Customer extends Model
     protected $table = "customers";
     protected $primaryKey = "id";
     protected $keyType = "string";
+    protected $with = ["wallet", "image"];
     public $incrementing = false;
     public $timestamps = false;
+    
     
     public function wallet(): HasOne {
         return $this->hasOne(Wallets::class, "customer_id", "id");
