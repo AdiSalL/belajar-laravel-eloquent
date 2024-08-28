@@ -24,7 +24,7 @@ class Category extends Model
     ];
 
     protected $casts = [
-        
+        "created_at" => "datetime:U"
     ];  
 
     protected static function booted():void {
